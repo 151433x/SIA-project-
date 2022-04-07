@@ -79,7 +79,7 @@ def get_nearest_station(latitude,longitude):
         
         if wheelchair_accessible == 2:
             wheelchair_accessible='not wheelchair accessible'
-        elif wheelchair_accessible== 1:
+        elif wheelchair_accessible== 0:
             wheelchair_accessible='unknown'
         else: wheelchair_accessible='wheelchair accessible'
     except IndexError:
