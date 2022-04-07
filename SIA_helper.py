@@ -1,8 +1,32 @@
 # Your API KEYS (you need to use your own keys - very long random characters)
-from config import MAPQUEST_API_KEY, MBTA_API_KEY
+from importlib.abc import Finder
+from config import MAPQUEST_API_KEY, MBTA_API_KEY,ATTOM_API_KEY
 import urllib.request
 from pprint import pprint
 import json
+import http.client 
+
+def property_detailer(address_number,address_2):
+    """"this will take in two forms, one main address and then one city, and state. from there it will return the entire json of information about the property"""
+    conn = http.client.HTTPSConnection("api.gateway.attomdata.com")
+    address_number=address_number.replace(' ','%20')
+    address_2=address_2.replace(',','%2C')
+    address_2=address_2.replace(' ','%20')
+    headers = { 
+        'accept': "application/json", 
+        'apikey': ATTOM_API_KEY 
+    } 
+    conn.request("GET", f"/propertyapi/v1.0.0/property/detail?address1={address_number}&address2={address_2}", headers=headers)
+    res = conn.getresponse() 
+    data = res.read()
+    result=json.loads(data.decode("utf-8"))
+    return result
+def postcode(address_number,address_2):
+    """this function will take 2 inputs one address_number and adresss 2 which is just the 'city,state', from there it will get the postal code of the property."""
+    result =property_detailer(address_number,address_2)['property'][0]['address']['postal1']
+    return result
+def properties_around(address_number,address_2):
+    property_detailer(address_number,address_2)
 
 
 # Useful URLs (you need to add the appropriate parameters for your requests)
@@ -10,10 +34,8 @@ MAPQUEST_BASE_URL = "http://www.mapquestapi.com/geocoding/v1/address"
 MBTA_BASE_URL = "https://api-v3.mbta.com/stops"
 MBTA_DISTANCE_URL=''
 
-
 # A little bit of scaffolding if you want to use it
 # upload api and hide 
-
 
 def get_json(url):
     """
@@ -25,8 +47,7 @@ def get_json(url):
     f = urllib.request.urlopen(url)
     response_text = f.read().decode('utf-8')
     response_data = json.loads(response_text)
-    return response_data
-    
+    return response_data   
 def get_lat_long(place_name):
     """
     Given a place name or address, return a (latitude, longitude) tuple
@@ -40,7 +61,6 @@ def get_lat_long(place_name):
     lat=data['results'][0]['locations'][0]['latLng']['lat']
     lng=data['results'][0]['locations'][0]['latLng']['lng']
     return lat,lng
-
 def get_nearest_station(latitude,longitude):
     """
     Given latitude and longitude strings, return a (station_name, wheelchair_accessible, lat, long)
@@ -65,8 +85,6 @@ def get_nearest_station(latitude,longitude):
     except IndexError:
         return None
     return station_name,wheelchair_accessible,lat,long
-
-
 def find_stop_near(place_name):
     """
     Given a place name or address, return the nearest MBTA stop and whether it is wheelchair accessible.
@@ -76,22 +94,22 @@ def find_stop_near(place_name):
     lat,long=get_lat_long(place_name)
     stop, wheelchair, lat, long=get_nearest_station(lat,long)
     return stop, wheelchair, lat, long
-
 def map_maker(lat, long,w,h, zoom):
+
     """
     takes lat, long returns api url of map"""
     return f"https://open.mapquestapi.com/staticmap/v5/map?key={MAPQUEST_API_KEY}&center={lat},{long}&size={w},{h}@2x&zoom={zoom}&locations={lat},{long}"
-
 
 def main():
     """
     You can test all the functions here
     """
-    # pprint(get_json(f'http://www.mapquestapi.com/geocoding/v1/address?key={MAPQUEST_API_KEY}&location={location}'))
-    # pprint(get_lat_long('boston common'))
-    lat,long=get_lat_long('boston common')
-    pprint(get_nearest_station(lat,long))
-    print(lat,long)
+    address_number='7 cedar st'    
+    address_2='wellesley, ma'
+    pprint(property_detailer(address_number,address_2))
+    pprint(postcode(address_number,address_2))
+
+  
 
 
 if __name__ == '__main__':
