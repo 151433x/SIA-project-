@@ -12,7 +12,7 @@ def mbta_close():
             stop,wheelchair, lat, long= find_stop_near(location)
             map_url = map_maker(lat,long,600,450,14)
         except TypeError:
-            stop,wheelchair, map_url = "too far", "jus walk", ""
+            stop,wheelchair, map_url = "too far", "jus walk"
         return render_template("mbta-result.html", stop=stop, wheelchair=wheelchair,map_url=map_url)
     return render_template("mbta-form.html")
 
