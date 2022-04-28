@@ -9,9 +9,9 @@
 </head>
 
 <body>
-    <form action="" method="post">
-        <label for="">Location: <input type="text" name="location"></label>
-        <button>Find Closest MBTA Stop</button>
+    <form action="/result" method="POST">
+        <label for="">Location: <input type="text" name="location2"></label>
+        <button value="2" name="button2">Find Closest MBTA stop</button>
     </form>
     <p>Nearest stop is {{ stop }} and it is {{ wheelchair }}</p>
     <iframe name = "map" src="{{ map_url }}" width="1000" height="1000" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

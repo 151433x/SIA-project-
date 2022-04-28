@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route finder </title>
+</head>
+
+<body>
+    <iframe name = "map" src="{{ map_url2 }}" width="1000" height="1000" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p>Nearest stop is {{ stop2 }} and it is {{ wheelchair2 }}</p>
+    {% for direction in ourlist %}
+    <p>{{direction}}</p>
+    {% endfor %}
+</body>
+
+</html>
